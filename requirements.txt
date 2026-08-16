@@ -1,0 +1,5 @@
+groq==1.6.0
+jira==3.10.5
+python-dotenv==1.2.2
+Requests==2.34.2
+tiktoken==0.12.0

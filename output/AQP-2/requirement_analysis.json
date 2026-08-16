@@ -1,0 +1,97 @@
+{
+  "story_id": "AQP-2",
+  "story_summary": "Test Login functionality for the dashboard",
+  "functional_intent": "Verify that users can authenticate with their registered email and password, receive appropriate UI feedback, and be directed to the dashboard while enforcing security controls.",
+  "in_scope_features": [
+    "Email field validation (format)",
+    "Password field validation (non‑empty, masked input)",
+    "Login button interaction",
+    "Credential verification against backend",
+    "Successful login redirect to dashboard",
+    "Display of error messages for invalid credentials",
+    "Brute‑force protection mechanisms (e.g., account lockout, rate limiting)"
+  ],
+  "out_of_scope_assumptions": [
+    "Password recovery / reset flows",
+    "Multi‑factor authentication",
+    "Social login integrations",
+    "User registration process",
+    "Logout functionality"
+  ],
+  "user_flows": [
+    "Happy path: User enters valid email and password → clicks Login → credentials verified → redirected to Dashboard.",
+    "Invalid credentials: User enters wrong email or password → clicks Login → error message displayed, no redirect.",
+    "Email format error: User enters malformed email → clicks Login → client‑side validation prevents submission.",
+    "Empty password: User leaves password blank → clicks Login → client‑side validation prevents submission.",
+    "Brute‑force lockout: Multiple consecutive failed login attempts → account temporarily locked → appropriate lockout message shown."
+  ],
+  "risk_areas": [
+    {
+      "area": "Security",
+      "description": "Potential for credential brute‑force attacks and exposure of password input.",
+      "severity": "Critical"
+    },
+    {
+      "area": "Functional",
+      "description": "Incorrect handling of login success/failure may block access or expose sensitive data.",
+      "severity": "High"
+    },
+    {
+      "area": "Data",
+      "description": "Improper masking or logging of passwords could lead to data leakage.",
+      "severity": "High"
+    },
+    {
+      "area": "UX",
+      "description": "Unclear error messages or lack of password masking degrade user experience.",
+      "severity": "Medium"
+    },
+    {
+      "area": "Performance",
+      "description": "Slow authentication response may cause time‑outs and affect usability.",
+      "severity": "Medium"
+    }
+  ],
+  "acceptance_criteria_breakdown": [
+    {
+      "ac_id": "AC-1",
+      "description": "Users must be redirected to the Dashboard upon successful login.",
+      "testable_points": [
+        "Submit valid email and password.",
+        "Verify HTTP 200 response from authentication endpoint.",
+        "Confirm URL changes to dashboard URL.",
+        "Check that dashboard page elements load successfully."
+      ]
+    },
+    {
+      "ac_id": "AC-2",
+      "description": "Passwords must be masked during entry.",
+      "testable_points": [
+        "Focus password field and type characters.",
+        "Assert input type is 'password' or characters are visually obscured.",
+        "Verify that no plaintext password is exposed in DOM or network payloads."
+      ]
+    },
+    {
+      "ac_id": "AC-3",
+      "description": "An error message must appear for invalid credentials.",
+      "testable_points": [
+        "Submit incorrect email or password.",
+        "Assert that an error toast/inline message is displayed.",
+        "Validate message text matches specification (e.g., 'Invalid email or password').",
+        "Confirm that user remains on login page."
+      ]
+    },
+    {
+      "ac_id": "AC-4",
+      "description": "The system must prevent \"Brute Force\" attacks.",
+      "testable_points": [
+        "Attempt multiple consecutive failed logins exceeding threshold.",
+        "Verify account lockout response (status code, lockout message).",
+        "Check that further attempts are blocked for defined lockout period.",
+        "Ensure rate‑limiting headers or mechanisms are present."
+      ]
+    }
+  ],
+  "test_design_notes": "Focus on cross‑platform consistency (Web, Android, iOS) for UI behavior and network interactions. Include both client‑side (HTML5 validation, masked input) and server‑side validation checks. Leverage automated security testing tools to simulate rapid login attempts for brute‑force verification. Capture performance metrics (time to authenticate) under normal and peak load conditions. Ensure no sensitive data is logged in test environments."
+}

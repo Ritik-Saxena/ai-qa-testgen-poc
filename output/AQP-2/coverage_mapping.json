@@ -1,0 +1,91 @@
+{
+  "story_id": "AQP-2",
+  "acceptance_criteria_coverage": [
+    {
+      "ac_id": "AC-1",
+      "ac_description": "Users must be redirected to the Dashboard upon successful login.",
+      "covered_by_test_cases": [
+        "TC-001",
+        "TC-004",
+        "TC-005",
+        "TC-008",
+        "TC-009"
+      ],
+      "coverage_status": "Covered",
+      "coverage_risk": "Low"
+    },
+    {
+      "ac_id": "AC-2",
+      "ac_description": "Passwords must be masked during entry.",
+      "covered_by_test_cases": [
+        "TC-002"
+      ],
+      "coverage_status": "Covered",
+      "coverage_risk": "Medium"
+    },
+    {
+      "ac_id": "AC-3",
+      "ac_description": "An error message must appear for invalid credentials.",
+      "covered_by_test_cases": [
+        "TC-003",
+        "TC-009"
+      ],
+      "coverage_status": "Covered",
+      "coverage_risk": "Medium"
+    },
+    {
+      "ac_id": "AC-4",
+      "ac_description": "The system must prevent \"Brute Force\" attacks.",
+      "covered_by_test_cases": [
+        "TC-006",
+        "TC-007"
+      ],
+      "coverage_status": "Covered",
+      "coverage_risk": "High"
+    }
+  ],
+  "coverage_summary": {
+    "total_acceptance_criteria": 4,
+    "fully_covered": 4,
+    "partially_covered": 0,
+    "not_covered": 0,
+    "coverage_percentage": 100,
+    "risk_weighted_coverage_percentage": 75
+  },
+  "identified_coverage_gaps": [
+    {
+      "gap_type": "Missing Security",
+      "description": "No test verifies that password masking cannot be bypassed via browser developer tools or script injection.",
+      "affected_acceptance_criteria": [
+        "AC-2"
+      ],
+      "risk_level": "High",
+      "recommended_test_scenario": "Attempt to reveal password field value via JavaScript console and ensure it remains masked or inaccessible."
+    },
+    {
+      "gap_type": "Missing Scenario",
+      "description": "Edge case of login with email containing special characters or Unicode is not exercised.",
+      "affected_acceptance_criteria": [
+        "AC-1"
+      ],
+      "risk_level": "Medium",
+      "recommended_test_scenario": "Submit login with a valid email containing plus signs, dots, or international characters and verify successful redirect."
+    },
+    {
+      "gap_type": "Missing NFR",
+      "description": "Rate‑limiting behavior under sustained high load is not measured.",
+      "affected_acceptance_criteria": [
+        "AC-4"
+      ],
+      "risk_level": "High",
+      "recommended_test_scenario": "Perform load test with a burst of failed login attempts (e.g., 500 requests/second) and confirm that 429 responses are returned after the defined limit."
+    }
+  ],
+  "qa_recommendations": [
+    "Add a security test to confirm password field cannot be programmatically read or exposed (high risk).",
+    "Include email‑format edge case tests with special/Unicode characters to ensure AC‑1 robustness.",
+    "Create a performance/security load test for rate limiting to close the high‑risk gap identified for AC‑4.",
+    "Automate accessibility verification (TC‑009) where possible using tooling (e.g., axe‑core) to reduce manual effort.",
+    "Prioritize execution of high‑risk tests TC‑006, TC‑007, and the new rate‑limiting load test in every regression cycle."
+  ]
+}

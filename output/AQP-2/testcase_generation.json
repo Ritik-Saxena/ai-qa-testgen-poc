@@ -1,0 +1,241 @@
+{
+  "story_id": "AQP-2",
+  "test_cases": [
+    {
+      "test_case_id": "TC-001",
+      "title": "Successful login redirects to Dashboard",
+      "category": "Positive",
+      "sub_category": "Happy Path",
+      "mapped_acceptance_criteria": [
+        "AC-1"
+      ],
+      "preconditions": [
+        "User account exists with email test.user@example.com and password ValidPass123!"
+      ],
+      "test_steps": [
+        "Navigate to login page.",
+        "Enter email 'test.user@example.com' in Email field.",
+        "Enter password 'ValidPass123!' in Password field.",
+        "Click the Login button."
+      ],
+      "expected_result": "HTTP 200 response from authentication endpoint, URL changes to /dashboard, and all primary dashboard widgets are visible.",
+      "test_data": [
+        {
+          "email": "test.user@example.com",
+          "password": "ValidPass123!"
+        }
+      ],
+      "priority": "P0",
+      "automation_candidate": true,
+      "automation_reason": "Straightforward UI flow; can be automated with Selenium/WebDriver or mobile UI frameworks."
+    },
+    {
+      "test_case_id": "TC-002",
+      "title": "Password input is masked and not exposed in DOM/network",
+      "category": "Positive",
+      "sub_category": "Security - Input Masking",
+      "mapped_acceptance_criteria": [
+        "AC-2"
+      ],
+      "preconditions": [],
+      "test_steps": [
+        "Navigate to login page.",
+        "Focus on Password field and type 'Secret123'.",
+        "Inspect the input element attribute.",
+        "Capture network request payload for login submission."
+      ],
+      "expected_result": "Input element has type='password' and characters appear as dots/asterisks; request payload does not contain plaintext password (e.g., password is hashed or sent over TLS only).",
+      "test_data": [
+        {
+          "password": "Secret123"
+        }
+      ],
+      "priority": "P1",
+      "automation_candidate": true,
+      "automation_reason": "Can be validated via DOM inspection and network proxy (e.g., BrowserMob) in automated script."
+    },
+    {
+      "test_case_id": "TC-003",
+      "title": "Invalid credentials display error message without redirect",
+      "category": "Negative",
+      "sub_category": "Authentication Failure",
+      "mapped_acceptance_criteria": [
+        "AC-3"
+      ],
+      "preconditions": [
+        "User account exists with email test.user@example.com and password ValidPass123!"
+      ],
+      "test_steps": [
+        "Navigate to login page.",
+        "Enter email 'test.user@example.com'.",
+        "Enter password 'WrongPass!'.",
+        "Click Login.",
+        "Observe UI response."
+      ],
+      "expected_result": "Error toast/inline message 'Invalid email or password' appears, URL remains on login page, no dashboard elements loaded.",
+      "test_data": [
+        {
+          "email": "test.user@example.com",
+          "password": "WrongPass!"
+        }
+      ],
+      "priority": "P0",
+      "automation_candidate": true,
+      "automation_reason": "Error message detection is easily scripted."
+    },
+    {
+      "test_case_id": "TC-004",
+      "title": "Email format validation prevents submission",
+      "category": "Negative",
+      "sub_category": "Client‑side Validation",
+      "mapped_acceptance_criteria": [
+        "AC-1"
+      ],
+      "preconditions": [],
+      "test_steps": [
+        "Navigate to login page.",
+        "Enter email 'invalid-email-format' in Email field.",
+        "Enter any password 'AnyPass1!'.",
+        "Attempt to click Login.",
+        "Check if form submission is blocked."
+      ],
+      "expected_result": "Login button remains disabled or submission is prevented; browser shows native HTML5 validation error.",
+      "test_data": [
+        {
+          "email": "invalid-email-format",
+          "password": "AnyPass1!"
+        }
+      ],
+      "priority": "P1",
+      "automation_candidate": true,
+      "automation_reason": "Can verify button state or validation message via UI automation."
+    },
+    {
+      "test_case_id": "TC-005",
+      "title": "Empty password field triggers client‑side validation",
+      "category": "Negative",
+      "sub_category": "Client‑side Validation",
+      "mapped_acceptance_criteria": [
+        "AC-1"
+      ],
+      "preconditions": [],
+      "test_steps": [
+        "Navigate to login page.",
+        "Enter valid email 'test.user@example.com'.",
+        "Leave Password field empty.",
+        "Click Login.",
+        "Observe validation feedback."
+      ],
+      "expected_result": "Login attempt is blocked; UI shows 'Password is required' message; no network request is sent.",
+      "test_data": [
+        {
+          "email": "test.user@example.com",
+          "password": ""
+        }
+      ],
+      "priority": "P1",
+      "automation_candidate": true,
+      "automation_reason": "Validation message can be asserted in automated UI test."
+    },
+    {
+      "test_case_id": "TC-006",
+      "title": "Account lockout after exceeding failed login attempts",
+      "category": "Security",
+      "sub_category": "Brute‑Force Protection",
+      "mapped_acceptance_criteria": [
+        "AC-4"
+      ],
+      "preconditions": [
+        "User account exists with email lockout.user@example.com."
+      ],
+      "test_steps": [
+        "Navigate to login page.",
+        "For i = 1 to 6:",
+        "  Enter email 'lockout.user@example.com' and incorrect password 'Wrong{i}'.",
+        "  Click Login.",
+        "  Capture response.",
+        "After attempts, attempt login again with correct password 'CorrectPass1!'."
+      ],
+      "expected_result": "After threshold (e.g., 5 attempts), server returns lockout status (e.g., 423 Locked) with message 'Account temporarily locked'. Subsequent attempts, even with correct credentials, are blocked until lockout period expires.",
+      "test_data": [
+        {
+          "email": "lockout.user@example.com",
+          "invalid_passwords": [
+            "Wrong1",
+            "Wrong2",
+            "Wrong3",
+            "Wrong4",
+            "Wrong5",
+            "Wrong6"
+          ],
+          "valid_password": "CorrectPass1!"
+        }
+      ],
+      "priority": "P0",
+      "automation_candidate": true,
+      "automation_reason": "Looped login attempts can be scripted; response codes and messages can be validated."
+    },
+    {
+      "test_case_id": "TC-007",
+      "title": "Rate limiting headers present on failed login response",
+      "category": "Security",
+      "sub_category": "Rate Limiting",
+      "mapped_acceptance_criteria": [
+        "AC-4"
+      ],
+      "preconditions": [],
+      "test_steps": [
+        "Send rapid succession (e.g., 20) HTTP POST login requests with invalid credentials to authentication endpoint.",
+        "Capture each response header."
+      ],
+      "expected_result": "Responses include headers such as 'X-Rate-Limit-Limit', 'X-Rate-Limit-Remaining', and appropriate 429 Too Many Requests after limit is reached.",
+      "test_data": [],
+      "priority": "P1",
+      "automation_candidate": true,
+      "automation_reason": "Can be performed with API testing tools (Postman, JMeter) in CI."
+    },
+    {
+      "test_case_id": "TC-008",
+      "title": "Authentication response time under normal load meets performance SLA",
+      "category": "NFR",
+      "sub_category": "Performance",
+      "mapped_acceptance_criteria": [
+        "AC-1"
+      ],
+      "preconditions": [
+        "Test environment with baseline load (e.g., 100 concurrent users)."
+      ],
+      "test_steps": [
+        "Simulate 100 concurrent login requests with valid credentials using load testing tool.",
+        "Measure average response time of authentication endpoint."
+      ],
+      "expected_result": "Average response time ≤ 2 seconds and 95th percentile ≤ 3 seconds.",
+      "test_data": [],
+      "priority": "P2",
+      "automation_candidate": true,
+      "automation_reason": "Load testing scripts can be integrated into performance pipeline."
+    },
+    {
+      "test_case_id": "TC-009",
+      "title": "Login page complies with WCAG 2.1 AA contrast and focus order",
+      "category": "NFR",
+      "sub_category": "Accessibility",
+      "mapped_acceptance_criteria": [
+        "AC-1",
+        "AC-3"
+      ],
+      "preconditions": [],
+      "test_steps": [
+        "Load login page with a screen reader (e.g., NVDA).",
+        "Navigate using keyboard Tab key through Email, Password, and Login button.",
+        "Verify that each element has discernible label and sufficient color contrast.",
+        "Confirm error messages are announced to assistive technology."
+      ],
+      "expected_result": "All interactive elements are reachable via keyboard, have appropriate ARIA labels, and meet contrast ratios; error messages are read aloud.",
+      "test_data": [],
+      "priority": "P2",
+      "automation_candidate": false,
+      "automation_reason": "Requires manual accessibility validation tools and human observation."
+    }
+  ]
+}
