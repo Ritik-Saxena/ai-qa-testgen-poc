@@ -9,3 +9,16 @@ https://developer.atlassian.com/cloud/confluence/basic-auth-for-rest-apis/
 
 Atlassian API Token:
 https://id.atlassian.com/manage-profile/security/api-tokens
+
+
+                 QAWorkflowService
+                         │
+          ┌──────────────┼──────────────┐
+          │              │              │
+          ▼              ▼              ▼
+    PromptBuilder    LLMClient       JsonUtils
+          │              │              │
+          └──────────────┼──────────────┘
+                         │
+                         ▼
+                  WorkflowState

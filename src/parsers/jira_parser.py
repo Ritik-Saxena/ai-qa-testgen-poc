@@ -1,8 +1,8 @@
-from .jira_client import JiraClient
+from src.clients.atlassian.jira_client import JiraClient
 
 class JiraParser:
 
-    def normailze_multiline_text(self, text):
+    def normalize_multiline_text(self, text):
         if not text:
             return []
 
@@ -32,14 +32,14 @@ class JiraParser:
         
 
         story_id = jira_story.get("story_id")
-        summary = self.normailze_multiline_text(jira_story.get("summary"))
-        description = self.normailze_multiline_text(jira_story.get("description"))
+        summary = self.normalize_multiline_text(jira_story.get("summary"))
+        description = self.normalize_multiline_text(jira_story.get("description"))
         application_context = jira_story.get("application_context")
-        preconditions = self.normailze_multiline_text(jira_story.get("preconditions"))
-        acceptance_criteria = self.normailze_multiline_text(jira_story.get("acceptance_criteria"))
-        constraints_assumptions = self.normailze_multiline_text(jira_story.get("constraints_assumptions"))
-        severity = self.normailze_multiline_text(jira_story.get("severity"))
-        pull_request = self.normailze_multiline_text(jira_story.get("pull_request"))
+        preconditions = self.normalize_multiline_text(jira_story.get("preconditions"))
+        acceptance_criteria = self.normalize_multiline_text(jira_story.get("acceptance_criteria"))
+        constraints_assumptions = self.normalize_multiline_text(jira_story.get("constraints_assumptions"))
+        severity = self.normalize_multiline_text(jira_story.get("severity"))
+        pull_request = self.normalize_multiline_text(jira_story.get("pull_request"))
 
         jira_story_json = {
             "story_id": story_id,
@@ -56,27 +56,3 @@ class JiraParser:
         filtered_jira_story_json = {k: v for k, v in jira_story_json.items() if v} # filtering empty fields to reduce token size & noise for LLM analysis
 
         return filtered_jira_story_json
-
-
-"""
-{
-    "issue_key": "SCRUM-7",
-    "summary": "Test Login functionality for the dashboard",
-    "description": {
-        "type": "doc",
-        "version": 1,
-        "content": [
-            {
-                "type": "paragraph",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": "Perform comprehensive functional, security, and usability testing on the Dashboard Login module. The goal is to ensure that authorized users can access the dashboard while unauthorized attempts are blocked and logged correctly.",
-                    }
-                ],
-            }
-        ],
-    },
-}
-
-"""

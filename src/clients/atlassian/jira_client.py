@@ -1,5 +1,5 @@
-# import requests
 import os
+
 from requests.auth import HTTPBasicAuth
 from jira import JIRA
 from jira.exceptions import JIRAError
@@ -67,8 +67,6 @@ class JiraClient:
         constraints_assumptions = self._issue_field(issue.fields, "customfield_10043")
         severity = self._issue_field(issue.fields, "customfield_10044")
         pull_request = self._issue_field(issue.fields, "customfield_10040")
-
-        # jira.add_comment(issue, "User story details fetched successfully.")
 
         return {
             "story_id": story_id,
