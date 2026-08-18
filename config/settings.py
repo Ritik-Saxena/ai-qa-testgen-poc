@@ -1,4 +1,10 @@
 import os
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
 
 MAX_TOKENS = int(os.getenv("MAX_TOKENS", 8000))
 LLM_MODEL = os.getenv("LLM_MODEL")

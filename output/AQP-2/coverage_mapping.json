@@ -6,66 +6,83 @@
       "ac_description": "Users must be redirected to the Dashboard upon successful login.",
       "covered_by_test_cases": [
         "TC-001",
+        "TC-005",
         "TC-006",
-        "TC-007"
+        "TC-008"
       ],
       "coverage_status": "Covered",
-      "coverage_risk": "High"
+      "coverage_risk": "Medium"
     },
     {
       "ac_id": "AC-2",
       "ac_description": "Passwords must be masked during entry.",
       "covered_by_test_cases": [
-        "TC-003",
-        "TC-006"
+        "TC-002"
       ],
-      "coverage_status": "Covered",
-      "coverage_risk": "High"
+      "coverage_status": "Partially Covered",
+      "coverage_risk": "Low"
     },
     {
       "ac_id": "AC-3",
       "ac_description": "An error message must appear for invalid credentials.",
       "covered_by_test_cases": [
-        "TC-002",
-        "TC-004",
-        "TC-006"
+        "TC-003",
+        "TC-004"
       ],
       "coverage_status": "Covered",
-      "coverage_risk": "High"
+      "coverage_risk": "Medium"
     },
     {
       "ac_id": "AC-4",
       "ac_description": "The system must prevent \"Brute Force\" attacks.",
       "covered_by_test_cases": [
-        "TC-005"
+        "TC-007"
       ],
-      "coverage_status": "Covered",
+      "coverage_status": "Partially Covered",
       "coverage_risk": "High"
     }
   ],
   "coverage_summary": {
     "total_acceptance_criteria": 4,
-    "fully_covered": 4,
-    "partially_covered": 0,
+    "fully_covered": 1,
+    "partially_covered": 2,
     "not_covered": 0,
-    "coverage_percentage": 100,
-    "risk_weighted_coverage_percentage": 100
+    "coverage_percentage": 25,
+    "risk_weighted_coverage_percentage": 25
   },
   "identified_coverage_gaps": [
     {
       "gap_type": "Missing Scenario",
-      "description": "No test validates that the account lockout state resets after the defined cooldown period.",
+      "description": "Toggle visibility for password field is not validated.",
+      "affected_acceptance_criteria": [
+        "AC-2"
+      ],
+      "risk_level": "Medium",
+      "recommended_test_scenario": "Create a test that clicks the 'show/hide password' toggle and verifies that the password characters become visible and then masked again."
+    },
+    {
+      "gap_type": "Missing NFR",
+      "description": "Audit log recording of lockout events is not covered.",
       "affected_acceptance_criteria": [
         "AC-4"
       ],
       "risk_level": "High",
-      "recommended_test_scenario": "Create a test that triggers the lockout, waits for the configured cooldown period, then attempts a successful login to verify that the lockout is cleared and normal login resumes."
+      "recommended_test_scenario": "After triggering account lockout, query the security audit log to confirm that a lockout event entry is created with correct user ID and timestamp."
+    },
+    {
+      "gap_type": "Missing Scenario",
+      "description": "Verification of lockout duration or reset mechanism is absent.",
+      "affected_acceptance_criteria": [
+        "AC-4"
+      ],
+      "risk_level": "High",
+      "recommended_test_scenario": "Attempt login after lockout period expires (or after invoking a reset) and verify that the account is unlocked and authentication succeeds."
     }
   ],
   "qa_recommendations": [
-    "Add the lockout‑reset test to address the high‑risk gap in AC‑4.",
-    "Include a test that verifies session token expiration and renewal after a period of inactivity.",
-    "Automate TC-006 (TLS and logging) where possible by integrating network sniffing into a secure test environment.",
-    "Periodically review and update the configurable lockout threshold and cooldown values to align with evolving security policies."
+    "Add the recommended test cases for password visibility toggle, audit‑log verification, and lockout duration to achieve full coverage of AC‑2 and AC‑4.",
+    "Prioritize execution of high‑risk security tests (TC-007 and the new lockout‑duration test) in every regression cycle.",
+    "Include automated checks for UI masking and toggle behavior in the smoke suite.",
+    "Integrate performance monitoring of login endpoint (TC-008) into continuous integration to catch regressions early."
   ]
 }

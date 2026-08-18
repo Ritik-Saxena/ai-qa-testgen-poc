@@ -8,15 +8,32 @@
       "security_impact"
     ],
     "score_range": "1-10",
-    "scoring_notes": "Scores are assigned on a 1‑10 scale per dimension; overall risk is the arithmetic mean of the four dimensions."
+    "scoring_notes": "Scores are based on qualitative assessment of each dimension for the given test case."
   },
   "test_case_risk_scores": [
     {
       "test_case_id": "TC-001",
-      "title": "Successful login redirects to dashboard within performance threshold",
+      "title": "Successful login with valid credentials redirects to dashboard",
       "category": "Positive",
       "mapped_acceptance_criteria": [
         "AC-1"
+      ],
+      "risk_scores": {
+        "business_impact": 3,
+        "user_impact": 3,
+        "failure_likelihood": 4,
+        "security_impact": 2
+      },
+      "overall_risk_score": 3.0,
+      "risk_level": "Low",
+      "risk_rationale": "Standard happy‑path login; failure would affect few users and has low security exposure."
+    },
+    {
+      "test_case_id": "TC-002",
+      "title": "Password field masks input characters",
+      "category": "Positive",
+      "mapped_acceptance_criteria": [
+        "AC-2"
       ],
       "risk_scores": {
         "business_impact": 2,
@@ -26,126 +43,119 @@
       },
       "overall_risk_score": 2.0,
       "risk_level": "Low",
-      "risk_rationale": "Login success is a core flow but failure has limited business and user impact; likelihood of failure is low and no security concerns."
+      "risk_rationale": "UI cosmetic issue; minimal impact on business or security."
     },
     {
-      "test_case_id": "TC-002",
-      "title": "Email format validation shows appropriate error",
+      "test_case_id": "TC-003",
+      "title": "Invalid credentials display generic error message",
       "category": "Negative",
       "mapped_acceptance_criteria": [
         "AC-3"
+      ],
+      "risk_scores": {
+        "business_impact": 5,
+        "user_impact": 5,
+        "failure_likelihood": 6,
+        "security_impact": 4
+      },
+      "overall_risk_score": 5.0,
+      "risk_level": "Medium",
+      "risk_rationale": "Incorrect handling could expose authentication logic; moderate likelihood."
+    },
+    {
+      "test_case_id": "TC-004",
+      "title": "Non‑existent email triggers generic error message",
+      "category": "Negative",
+      "mapped_acceptance_criteria": [
+        "AC-3"
+      ],
+      "risk_scores": {
+        "business_impact": 5,
+        "user_impact": 5,
+        "failure_likelihood": 5,
+        "security_impact": 4
+      },
+      "overall_risk_score": 4.75,
+      "risk_level": "Medium",
+      "risk_rationale": "Potential user enumeration risk; important but mitigated by generic message."
+    },
+    {
+      "test_case_id": "TC-005",
+      "title": "Client‑side validation rejects malformed email format",
+      "category": "Negative",
+      "mapped_acceptance_criteria": [
+        "AC-1"
       ],
       "risk_scores": {
         "business_impact": 2,
         "user_impact": 2,
         "failure_likelihood": 3,
-        "security_impact": 1
-      },
-      "overall_risk_score": 2.0,
-      "risk_level": "Low",
-      "risk_rationale": "UI validation errors have minimal business effect; they are unlikely to cause security issues."
-    },
-    {
-      "test_case_id": "TC-003",
-      "title": "Password field masking persists across platforms",
-      "category": "Positive",
-      "mapped_acceptance_criteria": [
-        "AC-2"
-      ],
-      "risk_scores": {
-        "business_impact": 2,
-        "user_impact": 3,
-        "failure_likelihood": 3,
         "security_impact": 2
       },
-      "overall_risk_score": 2.5,
+      "overall_risk_score": 2.25,
       "risk_level": "Low",
-      "risk_rationale": "Masking affects usability and minor security perception; risk remains low."
+      "risk_rationale": "Minor UI validation; low impact if it fails."
     },
     {
-      "test_case_id": "TC-004",
-      "title": "Generic error message displayed for incorrect credentials",
+      "test_case_id": "TC-006",
+      "title": "Client‑side validation prevents empty password submission",
       "category": "Negative",
       "mapped_acceptance_criteria": [
-        "AC-3"
+        "AC-1"
       ],
       "risk_scores": {
         "business_impact": 4,
-        "user_impact": 4,
-        "failure_likelihood": 5,
-        "security_impact": 2
+        "user_impact": 5,
+        "failure_likelihood": 4,
+        "security_impact": 7
       },
-      "overall_risk_score": 3.75,
+      "overall_risk_score": 5.0,
       "risk_level": "Medium",
-      "risk_rationale": "Improper error messages could expose authentication logic and affect user experience; moderate likelihood."
+      "risk_rationale": "Missing validation could allow empty passwords leading to security concerns."
     },
     {
-      "test_case_id": "TC-005",
-      "title": "Brute‑force lockout after configurable failed attempts",
+      "test_case_id": "TC-007",
+      "title": "Brute‑force protection locks account after max failed attempts",
       "category": "Security",
       "mapped_acceptance_criteria": [
         "AC-4"
       ],
       "risk_scores": {
         "business_impact": 8,
-        "user_impact": 7,
-        "failure_likelihood": 8,
-        "security_impact": 9
-      },
-      "overall_risk_score": 8.0,
-      "risk_level": "High",
-      "risk_rationale": "Lockout mechanism is critical for protecting accounts; failure can lead to account takeover or denial of service."
-    },
-    {
-      "test_case_id": "TC-006",
-      "title": "Login over TLS and no sensitive data logged",
-      "category": "Security",
-      "mapped_acceptance_criteria": [
-        "AC-1",
-        "AC-2",
-        "AC-3"
-      ],
-      "risk_scores": {
-        "business_impact": 7,
-        "user_impact": 6,
+        "user_impact": 8,
         "failure_likelihood": 5,
         "security_impact": 9
       },
-      "overall_risk_score": 6.75,
+      "overall_risk_score": 7.5,
       "risk_level": "High",
-      "risk_rationale": "Transport security and data leakage are high‑impact concerns; any breach would be severe."
+      "risk_rationale": "Critical security control; failure could enable account takeover."
     },
     {
-      "test_case_id": "TC-007",
-      "title": "Login response time under load remains within SLA",
+      "test_case_id": "TC-008",
+      "title": "Login response time under load meets performance SLA",
       "category": "NFR",
       "mapped_acceptance_criteria": [
         "AC-1"
       ],
       "risk_scores": {
         "business_impact": 5,
-        "user_impact": 5,
-        "failure_likelihood": 5,
+        "user_impact": 4,
+        "failure_likelihood": 3,
         "security_impact": 2
       },
-      "overall_risk_score": 4.25,
+      "overall_risk_score": 3.5,
       "risk_level": "Medium",
-      "risk_rationale": "Performance degradation can affect user satisfaction and revenue; likelihood under load is moderate."
+      "risk_rationale": "Performance degradation affects user experience and may breach SLA."
     }
   ],
   "prioritization_summary": {
     "execution_order": [
-      "TC-005",
-      "TC-006",
-      "TC-004",
       "TC-007",
-      "TC-001",
-      "TC-002",
-      "TC-003"
+      "TC-003",
+      "TC-001"
     ],
     "high_risk_tests": [
-      "TC-005",
-      "TC-006"
+      "TC-007"
     ],
     "recommended_smoke_suite": [
       "TC-001",

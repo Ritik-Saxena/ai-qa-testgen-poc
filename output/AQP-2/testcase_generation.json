@@ -3,197 +3,215 @@
   "test_cases": [
     {
       "test_case_id": "TC-001",
-      "title": "Successful login redirects to dashboard within performance threshold",
+      "title": "Successful login with valid credentials redirects to dashboard",
       "category": "Positive",
       "sub_category": "Valid credentials",
       "mapped_acceptance_criteria": [
         "AC-1"
       ],
       "preconditions": [
-        "User account exists with email verified",
-        "User is on the login page (Web, Android, iOS)"
+        "User account exists with email user@example.com and known password"
       ],
       "test_steps": [
-        "Enter a correctly formatted email address belonging to an active user",
-        "Enter the correct password",
+        "Navigate to login page",
+        "Enter email \"user@example.com\"",
+        "Enter password \"ValidPass123!\"",
         "Click the Login button"
       ],
-      "expected_result": "User is redirected to the dashboard URL, a session token/cookie is set, and the redirect completes in less than 2 seconds.",
+      "expected_result": "Server returns authentication token, client navigates to dashboard URL, dashboard loads without errors",
       "test_data": [
         {
-          "email": "valid.user@example.com",
+          "email": "user@example.com",
           "password": "ValidPass123!"
         }
       ],
       "priority": "P0",
       "automation_candidate": true,
-      "automation_reason": "All steps are UI actions with deterministic outcomes; can be automated using Selenium/Appium with performance timer hooks."
+      "automation_reason": "Straightforward UI flow; can be automated with Selenium/Appium and API token validation"
     },
     {
       "test_case_id": "TC-002",
-      "title": "Email format validation shows appropriate error",
-      "category": "Negative",
-      "sub_category": "Invalid email format",
-      "mapped_acceptance_criteria": [
-        "AC-3"
-      ],
-      "preconditions": [
-        "User is on the login page"
-      ],
-      "test_steps": [
-        "Enter an email without '@' (e.g., 'invalidemail.com')",
-        "Enter any non‑empty password",
-        "Click the Login button"
-      ],
-      "expected_result": "Email format error message is displayed, is visible, has ARIA role='alert', and does not disclose password status.",
-      "test_data": [
-        {
-          "email": "invalidemail.com",
-          "password": "AnyPass123"
-        }
-      ],
-      "priority": "P1",
-      "automation_candidate": true,
-      "automation_reason": "Simple UI validation; can be captured via DOM inspection."
-    },
-    {
-      "test_case_id": "TC-003",
-      "title": "Password field masking persists across platforms",
+      "title": "Password field masks input characters",
       "category": "Positive",
       "sub_category": "UI masking",
       "mapped_acceptance_criteria": [
         "AC-2"
       ],
+      "preconditions": [],
+      "test_steps": [
+        "Navigate to login page",
+        "Locate password input field",
+        "Start typing \"Secret123\"",
+        "Observe that characters appear as bullets or asterisk"
+      ],
+      "expected_result": "Password input type is \"password\" and characters are hidden",
+      "test_data": [],
+      "priority": "P1",
+      "automation_candidate": true,
+      "automation_reason": "Can be validated by checking input element attribute and visual rendering via UI automation"
+    },
+    {
+      "test_case_id": "TC-003",
+      "title": "Invalid credentials display generic error message",
+      "category": "Negative",
+      "sub_category": "Wrong password",
+      "mapped_acceptance_criteria": [
+        "AC-3"
+      ],
       "preconditions": [
-        "User is on the login page on Web, Android, and iOS"
+        "User account exists with email user@example.com"
       ],
       "test_steps": [
-        "Focus on the password input field",
-        "Type a password string",
-        "Inspect the input type attribute or visual representation"
+        "Navigate to login page",
+        "Enter email \"user@example.com\"",
+        "Enter password \"WrongPass!\"",
+        "Click Login"
       ],
-      "expected_result": "Password characters are masked (input type='password') on all platforms.",
+      "expected_result": "Error message is visible, descriptive, does not reveal which field is incorrect, and follows UI guidelines",
       "test_data": [
         {
-          "password": "MaskTest123!"
+          "email": "user@example.com",
+          "password": "WrongPass!"
+        }
+      ],
+      "priority": "P0",
+      "automation_candidate": true,
+      "automation_reason": "Error toast can be captured and text validated via UI automation"
+    },
+    {
+      "test_case_id": "TC-004",
+      "title": "Non‑existent email triggers generic error message",
+      "category": "Negative",
+      "sub_category": "User enumeration protection",
+      "mapped_acceptance_criteria": [
+        "AC-3"
+      ],
+      "preconditions": [],
+      "test_steps": [
+        "Navigate to login page",
+        "Enter email \"nonexistent@example.com\"",
+        "Enter any password \"AnyPass1!\"",
+        "Click Login"
+      ],
+      "expected_result": "Same generic error message as for wrong password; does not disclose that email is not registered",
+      "test_data": [
+        {
+          "email": "nonexistent@example.com",
+          "password": "AnyPass1!"
+        }
+      ],
+      "priority": "P0",
+      "automation_candidate": true,
+      "automation_reason": "Message verification is automatable"
+    },
+    {
+      "test_case_id": "TC-005",
+      "title": "Client‑side validation rejects malformed email format",
+      "category": "Negative",
+      "sub_category": "Email format validation",
+      "mapped_acceptance_criteria": [
+        "AC-1"
+      ],
+      "preconditions": [],
+      "test_steps": [
+        "Navigate to login page",
+        "Enter email \"invalid-email\"",
+        "Enter any password \"Pass123!\"",
+        "Click Login"
+      ],
+      "expected_result": "Client displays validation error before submitting request (e.g., \"Enter a valid email address\")",
+      "test_data": [
+        {
+          "email": "invalid-email",
+          "password": "Pass123!"
         }
       ],
       "priority": "P1",
       "automation_candidate": true,
-      "automation_reason": "Can be verified programmatically via WebDriver/Appium by checking element attributes."
+      "automation_reason": "Can verify presence of validation message without network call"
     },
     {
-      "test_case_id": "TC-004",
-      "title": "Generic error message displayed for incorrect credentials",
+      "test_case_id": "TC-006",
+      "title": "Client‑side validation prevents empty password submission",
       "category": "Negative",
-      "sub_category": "Invalid credentials",
+      "sub_category": "Required field validation",
       "mapped_acceptance_criteria": [
-        "AC-3"
+        "AC-1"
       ],
-      "preconditions": [
-        "User is on the login page"
-      ],
+      "preconditions": [],
       "test_steps": [
-        "Enter a validly formatted email that exists in the system",
-        "Enter an incorrect password",
-        "Click the Login button"
+        "Navigate to login page",
+        "Enter email \"user@example.com\"",
+        "Leave password field blank",
+        "Click Login"
       ],
-      "expected_result": "A generic authentication error message appears, is accessible (ARIA role='alert'), does not reveal whether email or password is wrong, and disappears after a successful login.",
+      "expected_result": "Client displays password required validation error and does not send request to server",
       "test_data": [
         {
-          "email": "valid.user@example.com",
-          "password": "WrongPass!@#"
+          "email": "user@example.com",
+          "password": ""
         }
       ],
-      "priority": "P0",
+      "priority": "P1",
       "automation_candidate": true,
-      "automation_reason": "Message text and attributes can be asserted via automated UI scripts."
+      "automation_reason": "Validation message can be captured via UI automation"
     },
     {
-      "test_case_id": "TC-005",
-      "title": "Brute‑force lockout after configurable failed attempts",
+      "test_case_id": "TC-007",
+      "title": "Brute‑force protection locks account after max failed attempts",
       "category": "Security",
-      "sub_category": "Account lockout",
+      "sub_category": "Lockout mechanism",
       "mapped_acceptance_criteria": [
         "AC-4"
       ],
       "preconditions": [
-        "User account is active",
-        "Lockout threshold is set to 5 failed attempts"
+        "Account \"user@example.com\" is active",
+        "Maximum failed attempts configured to 5"
       ],
       "test_steps": [
-        "Repeat the following 5 times: enter valid email, enter wrong password, click Login",
-        "On the 6th attempt, enter the same credentials and click Login"
+        "Repeat the following 5 times: Enter email \"user@example.com\", enter wrong password \"Wrong1!\", click Login, verify error message",
+        "On 6th attempt, enter correct password \"ValidPass123!\" and click Login"
       ],
-      "expected_result": "After 5 failed attempts, the system returns a lockout notification; subsequent attempts continue to show lockout message until cooldown period expires.",
+      "expected_result": "After 5 failed attempts, account is locked; 6th attempt shows lockout message and no authentication token is issued",
       "test_data": [
         {
-          "email": "valid.user@example.com",
-          "password": "Incorrect1!"
+          "email": "user@example.com",
+          "wrong_passwords": [
+            "Wrong1!",
+            "Wrong2!",
+            "Wrong3!",
+            "Wrong4!",
+            "Wrong5!"
+          ],
+          "correct_password": "ValidPass123!"
         }
       ],
       "priority": "P0",
       "automation_candidate": true,
-      "automation_reason": "Looped UI actions can be scripted; lockout message can be validated."
+      "automation_reason": "Loop can be scripted; lockout message detection is automatable"
     },
     {
-      "test_case_id": "TC-006",
-      "title": "Login over TLS and no sensitive data logged",
-      "category": "Security",
-      "sub_category": "Transport security & data handling",
-      "mapped_acceptance_criteria": [
-        "AC-1",
-        "AC-2",
-        "AC-3"
-      ],
-      "preconditions": [
-        "Network traffic capture tool (e.g., Wireshark) is ready",
-        "Application logging is configured to mask passwords"
-      ],
-      "test_steps": [
-        "Start capture of HTTPS traffic",
-        "Perform a successful login with valid credentials",
-        "Stop capture and inspect packets",
-        "Review server logs for password leakage"
-      ],
-      "expected_result": "All login requests are sent over TLS (HTTPS); no password or plaintext credentials appear in network capture or server logs.",
-      "test_data": [
-        {
-          "email": "valid.user@example.com",
-          "password": "ValidPass123!"
-        }
-      ],
-      "priority": "P0",
-      "automation_candidate": false,
-      "automation_reason": "Requires network sniffing and log access, which are typically manual or require privileged integration."
-    },
-    {
-      "test_case_id": "TC-007",
-      "title": "Login response time under load remains within SLA",
+      "test_case_id": "TC-008",
+      "title": "Login response time under load meets performance SLA",
       "category": "NFR",
       "sub_category": "Performance",
       "mapped_acceptance_criteria": [
         "AC-1"
       ],
       "preconditions": [
-        "Load testing tool (e.g., JMeter) configured",
-        "Baseline performance threshold: <2 seconds per login"
+        "Load testing tool configured",
+        "Authentication service endpoint reachable"
       ],
       "test_steps": [
         "Simulate 200 concurrent login requests with valid credentials",
-        "Measure average response time for the login API",
-        "Verify that 95% of responses are under 2 seconds"
+        "Measure average response time and 95th percentile",
+        "Assert that average response time ≤ 2 seconds and 95th percentile ≤ 3 seconds"
       ],
-      "expected_result": "Average login response time stays below 2 seconds; no error spikes or throttling unrelated to brute‑force protection.",
-      "test_data": [
-        {
-          "email": "valid.user@example.com",
-          "password": "ValidPass123!"
-        }
-      ],
+      "expected_result": "Login endpoint responds within defined performance thresholds",
+      "test_data": [],
       "priority": "P2",
       "automation_candidate": true,
-      "automation_reason": "Can be fully automated with performance testing scripts."
+      "automation_reason": "Can be executed with JMeter/Gatling scripts; results captured automatically"
     }
   ]
 }
