@@ -8,46 +8,63 @@
       "security_impact"
     ],
     "score_range": "1-10",
-    "scoring_notes": "Scores are assigned on a 1‑10 scale per dimension; overall risk score is the arithmetic mean of the four dimension scores."
+    "scoring_notes": "Scores are assigned on a 1‑10 scale per dimension; overall risk is the arithmetic mean of the four dimensions."
   },
   "test_case_risk_scores": [
     {
       "test_case_id": "TC-001",
-      "title": "Successful login redirects to Dashboard",
+      "title": "Successful login redirects to dashboard within performance threshold",
       "category": "Positive",
       "mapped_acceptance_criteria": [
         "AC-1"
       ],
       "risk_scores": {
-        "business_impact": 3,
-        "user_impact": 3,
-        "failure_likelihood": 5,
+        "business_impact": 2,
+        "user_impact": 2,
+        "failure_likelihood": 2,
         "security_impact": 2
       },
-      "overall_risk_score": 3.25,
+      "overall_risk_score": 2.0,
       "risk_level": "Low",
-      "risk_rationale": "Login functionality is core but failure is unlikely and has limited security exposure; impact on business and users is modest."
+      "risk_rationale": "Login success is a core flow but failure has limited business and user impact; likelihood of failure is low and no security concerns."
     },
     {
       "test_case_id": "TC-002",
-      "title": "Password input is masked and not exposed in DOM/network",
+      "title": "Email format validation shows appropriate error",
+      "category": "Negative",
+      "mapped_acceptance_criteria": [
+        "AC-3"
+      ],
+      "risk_scores": {
+        "business_impact": 2,
+        "user_impact": 2,
+        "failure_likelihood": 3,
+        "security_impact": 1
+      },
+      "overall_risk_score": 2.0,
+      "risk_level": "Low",
+      "risk_rationale": "UI validation errors have minimal business effect; they are unlikely to cause security issues."
+    },
+    {
+      "test_case_id": "TC-003",
+      "title": "Password field masking persists across platforms",
       "category": "Positive",
       "mapped_acceptance_criteria": [
         "AC-2"
       ],
       "risk_scores": {
         "business_impact": 2,
-        "user_impact": 2,
-        "failure_likelihood": 4,
-        "security_impact": 8
+        "user_impact": 3,
+        "failure_likelihood": 3,
+        "security_impact": 2
       },
-      "overall_risk_score": 4.0,
-      "risk_level": "Medium",
-      "risk_rationale": "Security of password handling is important; exposure would be severe, but the likelihood of a masking failure is moderate."
+      "overall_risk_score": 2.5,
+      "risk_level": "Low",
+      "risk_rationale": "Masking affects usability and minor security perception; risk remains low."
     },
     {
-      "test_case_id": "TC-003",
-      "title": "Invalid credentials display error message without redirect",
+      "test_case_id": "TC-004",
+      "title": "Generic error message displayed for incorrect credentials",
       "category": "Negative",
       "mapped_acceptance_criteria": [
         "AC-3"
@@ -55,136 +72,84 @@
       "risk_scores": {
         "business_impact": 4,
         "user_impact": 4,
-        "failure_likelihood": 6,
+        "failure_likelihood": 5,
         "security_impact": 2
       },
-      "overall_risk_score": 4.0,
+      "overall_risk_score": 3.75,
       "risk_level": "Medium",
-      "risk_rationale": "Incorrect handling could confuse users and affect support load; security impact is low."
-    },
-    {
-      "test_case_id": "TC-004",
-      "title": "Email format validation prevents submission",
-      "category": "Negative",
-      "mapped_acceptance_criteria": [
-        "AC-1"
-      ],
-      "risk_scores": {
-        "business_impact": 2,
-        "user_impact": 2,
-        "failure_likelihood": 5,
-        "security_impact": 1
-      },
-      "overall_risk_score": 2.5,
-      "risk_level": "Low",
-      "risk_rationale": "Client‑side validation issue is minor and unlikely to cause business or security problems."
+      "risk_rationale": "Improper error messages could expose authentication logic and affect user experience; moderate likelihood."
     },
     {
       "test_case_id": "TC-005",
-      "title": "Empty password field triggers client‑side validation",
-      "category": "Negative",
+      "title": "Brute‑force lockout after configurable failed attempts",
+      "category": "Security",
       "mapped_acceptance_criteria": [
-        "AC-1"
+        "AC-4"
       ],
       "risk_scores": {
-        "business_impact": 2,
-        "user_impact": 2,
-        "failure_likelihood": 5,
-        "security_impact": 1
+        "business_impact": 8,
+        "user_impact": 7,
+        "failure_likelihood": 8,
+        "security_impact": 9
       },
-      "overall_risk_score": 2.5,
-      "risk_level": "Low",
-      "risk_rationale": "Similar to email validation; impact is minimal."
+      "overall_risk_score": 8.0,
+      "risk_level": "High",
+      "risk_rationale": "Lockout mechanism is critical for protecting accounts; failure can lead to account takeover or denial of service."
     },
     {
       "test_case_id": "TC-006",
-      "title": "Account lockout after exceeding failed login attempts",
+      "title": "Login over TLS and no sensitive data logged",
       "category": "Security",
       "mapped_acceptance_criteria": [
-        "AC-4"
+        "AC-1",
+        "AC-2",
+        "AC-3"
       ],
       "risk_scores": {
-        "business_impact": 9,
-        "user_impact": 9,
-        "failure_likelihood": 7,
+        "business_impact": 7,
+        "user_impact": 6,
+        "failure_likelihood": 5,
         "security_impact": 9
       },
-      "overall_risk_score": 8.5,
+      "overall_risk_score": 6.75,
       "risk_level": "High",
-      "risk_rationale": "Lockout protects against brute‑force attacks; failure would expose accounts and disrupt legitimate users, making it a high‑risk scenario."
+      "risk_rationale": "Transport security and data leakage are high‑impact concerns; any breach would be severe."
     },
     {
       "test_case_id": "TC-007",
-      "title": "Rate limiting headers present on failed login response",
-      "category": "Security",
+      "title": "Login response time under load remains within SLA",
+      "category": "NFR",
       "mapped_acceptance_criteria": [
-        "AC-4"
+        "AC-1"
       ],
       "risk_scores": {
         "business_impact": 5,
         "user_impact": 5,
-        "failure_likelihood": 8,
-        "security_impact": 8
-      },
-      "overall_risk_score": 6.5,
-      "risk_level": "High",
-      "risk_rationale": "Proper rate limiting is critical to mitigate credential stuffing; missing headers could allow abuse, so it is prioritized high."
-    },
-    {
-      "test_case_id": "TC-008",
-      "title": "Authentication response time under normal load meets performance SLA",
-      "category": "NFR",
-      "mapped_acceptance_criteria": [
-        "AC-1"
-      ],
-      "risk_scores": {
-        "business_impact": 2,
-        "user_impact": 2,
         "failure_likelihood": 5,
-        "security_impact": 1
+        "security_impact": 2
       },
-      "overall_risk_score": 2.5,
-      "risk_level": "Low",
-      "risk_rationale": "Performance degradation affects user experience but does not pose security or compliance risk."
-    },
-    {
-      "test_case_id": "TC-009",
-      "title": "Login page complies with WCAG 2.1 AA contrast and focus order",
-      "category": "NFR",
-      "mapped_acceptance_criteria": [
-        "AC-1",
-        "AC-3"
-      ],
-      "risk_scores": {
-        "business_impact": 3,
-        "user_impact": 4,
-        "failure_likelihood": 3,
-        "security_impact": 1
-      },
-      "overall_risk_score": 2.75,
-      "risk_level": "Low",
-      "risk_rationale": "Accessibility issues affect usability and compliance but have limited immediate business impact."
+      "overall_risk_score": 4.25,
+      "risk_level": "Medium",
+      "risk_rationale": "Performance degradation can affect user satisfaction and revenue; likelihood under load is moderate."
     }
   ],
   "prioritization_summary": {
     "execution_order": [
-      "TC-006",
-      "TC-007",
-      "TC-002",
-      "TC-003",
-      "TC-001",
-      "TC-004",
       "TC-005",
-      "TC-008",
-      "TC-009"
+      "TC-006",
+      "TC-004",
+      "TC-007",
+      "TC-001",
+      "TC-002",
+      "TC-003"
     ],
     "high_risk_tests": [
-      "TC-006",
-      "TC-007"
+      "TC-005",
+      "TC-006"
     ],
     "recommended_smoke_suite": [
       "TC-001",
-      "TC-006"
+      "TC-002"
     ]
   }
 }

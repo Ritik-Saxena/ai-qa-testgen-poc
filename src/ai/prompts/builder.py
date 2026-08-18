@@ -1,8 +1,11 @@
 import tiktoken
 
-from src.atlassian.jira_parser import JiraParser
+from src.parsers.jira_parser import JiraParser
 
-class PromptBuilder: 
+class PromptBuilder:
+	def __init__(self, jira_issue=None):
+		self.jira_issue = jira_issue
+
 	def build_requirement_prompt(self, issue_key):
 		json_schema_requirement = {
 			"story_id": "",
@@ -31,9 +34,6 @@ class PromptBuilder:
 		jira_parser_object = JiraParser()
 		jira_ticket = jira_parser_object.jira_issue_json(issue_key)
 
-		print("jira ticket json: ")
-		print(jira_ticket)
-		
 		jira_ticket_requirement_prompt = f"""
 		JSON SCHEMA (STRICT):
 		{json_schema_requirement}
