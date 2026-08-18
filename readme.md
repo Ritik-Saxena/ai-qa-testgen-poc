@@ -23,20 +23,19 @@ This proof-of-concept integrates with Atlassian JIRA and Confluence to automatic
 
 ## 📑 Table of Contents
 
-- [Getting Started](#-getting-started)
+- [Getting Started](#getting-started)
 - [Installation](#installation)
 - [Configuration](#configuration)
-- [Usage](#-usage--running-the-project)
-- [Architecture](#-architecture)
+- [Usage](#usage--running-the-project)
+- [Architecture](#architecture)
 - [Project Structure](#project-structure)
 - [System Workflow](#system-workflow)
-- [Technology Stack](#-technology-stack)
+- [Technology Stack](#technology-stack)
 - [API Reference](#api-reference)
-- [Contributing](#contributing)
-- [Troubleshooting](#-troubleshooting)
+- [Troubleshooting](#troubleshooting)
 
 ---
-
+<a id="getting-started"></a>
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -60,6 +59,7 @@ Before you begin, ensure you have the following:
    - Create an API key for LLM access
    - Verify API quota is sufficient
 
+<a id="installation"></a>
 ### Installation
 
 1. **Clone the repository**
@@ -82,6 +82,7 @@ Before you begin, ensure you have the following:
    pip install -r requirements.txt
    ```
 
+<a id="configuration"></a>
 ### Configuration
 
 1. **Create `.env` file from template**
@@ -121,6 +122,7 @@ Before you begin, ensure you have the following:
 
 ---
 
+<a id="usage--running-the-project"></a>
 ## 💻 Usage & Running the Project
 
 ### Run the Pipeline
@@ -175,37 +177,13 @@ logs/ai_qa_poc_2024-01-15_10-30-45.log
 ```
 
 ---
-
+<a id="architecture"></a>
 ## 🏗️ Architecture
 
 ### System Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    AI QA Test Generation                    │
-└─────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-                    ┌─────────────────────┐
-                    │  QAStoryPipeline    │ (Orchestrator)
-                    └─────────────────────┘
-                              │
-                ┌─────────────┼─────────────┐
-                ▼             ▼             ▼
-        ┌────────────┐  ┌────────────┐  ┌──────────┐
-        │  Clients   │  │  Services  │  │ Parsers  │
-        └────────────┘  └────────────┘  └──────────┘
-              │              │              │
-         ┌────┴────┐     ┌────┴────┐       │
-         ▼         ▼     ▼         ▼       ▼
-      ┌─────┐  ┌─────┐┌──────┐ ┌────────┐┌──────┐
-      │JIRA │  │ LLM ││Conf. │ │QA WF   ││JIRA  │
-      │     │  │     ││      │ │Service ││Parser│
-      └─────┘  └─────┘└──────┘ └────────┘└──────┘
-         ▲         ▲
-    Atlassian    Groq
-     Cloud        API
-```
+<img width="5688" height="1612" alt="architectural diagram" src="https://github.com/user-attachments/assets/7e8f735c-a7f2-422a-a97f-566751ce87d5" />
+
 
 ### Data Flow
 
@@ -230,6 +208,8 @@ logs/ai_qa_poc_2024-01-15_10-30-45.log
                     ↓
 10. Summary Generated & Published to Confluence
 ```
+
+<img width="6034" height="676" alt="Data flow diagram" src="https://github.com/user-attachments/assets/be3913ec-a2b5-478b-908a-ae3112b88967" />
 
 ### Component Responsibilities
 
@@ -262,6 +242,7 @@ logs/ai_qa_poc_2024-01-15_10-30-45.log
 
 ---
 
+<a id="project-structure"></a>
 ## 📁 Project Structure
 
 ```
@@ -325,7 +306,7 @@ ai-qa-testgen-poc/
 ```
 
 ---
-
+<a id="system-workflow"></a>
 ## 🔄 System Workflow
 
 ### Step 1: Requirement Analysis
@@ -371,7 +352,7 @@ ai-qa-testgen-poc/
   - HTML/PDF documentation (if configured)
 
 ---
-
+<a id="technology-stack"></a>
 ## 📊 Technology Stack
 
 | Layer | Technology |
@@ -395,7 +376,7 @@ tiktoken==0.12.0
 ```
 
 ---
-
+<a id="api-reference"></a>
 ## 🔧 API Reference
 
 ### Main Entry Point
@@ -445,12 +426,8 @@ response = llm._create_completion(prompt, token_size)
 ```
 
 
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
 ---
-
+<a id="troubleshooting"></a>
 ## 🆘 Troubleshooting
 
 ### Common Issues
