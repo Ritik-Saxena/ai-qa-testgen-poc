@@ -24,6 +24,7 @@ class QAWorkflowService:
         self.promptBuilder = PromptBuilder(jira_issue)
         self.jsonUtils = JsonUtils(jira_issue)
         self.llm_client = LLMClient(jira_issue)
+        self.confluence_service = ConfluenceService()
         
     def get_requirement_breakdown(self, state: WorkflowState):
             try:
@@ -82,7 +83,8 @@ class QAWorkflowService:
 
     def get_coverage_mapping(self, state: WorkflowState):
         try:
-            acceptance_criteria = json.loads(state.requirement_analysis_json).get("acceptance_criteria_breakdown", [])
+            requirement_data = json.loads(state.requirement_analysis_json)
+            acceptance_criteria = requirement_data.get("acceptance_criteria_breakdown", [])
             testcase_generation_json = state.testcase_generation_json
             risk_analysis_json = state.risk_analysis_json
             
@@ -123,9 +125,7 @@ class QAWorkflowService:
 
             log_response("Summarize Output", summarize_output_result)
 
-            # Creating the confluence page for the AI generated summary for the Jira story
-            self.confluence_service = ConfluenceService()
-            
+            # Creating the confluence page for the AI generated summary for the Jira story            
             page = self.confluence_service.create_or_update_page(
                 space_key="QA",
                 title=f"{self.jira_issue} - Automated QA Summary",
